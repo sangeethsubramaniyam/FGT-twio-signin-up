@@ -1,81 +1,30 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, View,Text, TextInput,Button } from 'react-native'
 import React from 'react'
-import Feather from 'react-native-vector-icons/Feather';
-// import LinearGradient from 'react-native-linear-gradient';
-import Entypo from 'react-native-vector-icons/Entypo';
-import { useNavigation } from '@react-navigation/native';
 
-
-const LoginScreen = () => {
-    const navigation=useNavigation();
-    const handleregister = () => {
-        navigation.navigate("Signup");
-    };
+const Login = () => {
   return (
-   <View style={styles.container} >
-   
-<View style={styles.wellcomecontainer}>
-<Text style={styles.wellcometext}>Login page..</Text>
-</View>
-
-<View style={styles.inputcontainer}>
-<Feather name={"user"} size={24} color={"#9A9A9A"} style={styles.inputicon}/>
-    <TextInput style={styles.Textinput} placeholder='Email'/>
-</View>
-<View style={styles.inputcontainer}>
-<Entypo name={"lock"} size={24} color={"#9A9A9A"} style={styles.inputicon}/>
-    <TextInput style={styles.Textinput} placeholder='Password' secureTextEntry/>
-</View>
-<Text style={styles.forgetpasswordtext}>Forget Password ?</Text>
-   <TouchableOpacity onPress={handleregister}>
-   <Text style={styles.footertext}>Submit<Text style={{textDecorationLine:"underline"}}>Login</Text></Text>
-   </TouchableOpacity>
+    <View style={{top:80}}>
+      <Text style={{fontSize:30,fontWeight:600,color:'navy',textAlign:'center'}}>LIMAT</Text>
+      <TextInput type="text" placeholder='username' 
+style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'center',left:70,top:40,borderRadius:12,}}
+      />
+       <TextInput type="text" placeholder='password' 
+style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'center',left:70,top:80,borderRadius:12,}}
+      />
+    
+      {/* <TextInput type="text" placeholder='password' style={{backgroundColor:'#fff',width:'50%'}} secureTextEntry/> */}
+      <View style={{width:'40%',borderRadius:18,top:100,left:100}}>
+   <Button title='submit' color='navy'/>
    </View>
+   <Text style={{top:110,left:100}}> you don't have account </Text>
+   <Text style={{top:115,left:150, textDecorationLine:'underline'}}>signup?</Text>
+      </View>
   )
 }
 
-export default LoginScreen
+export default Login
 
 const styles = StyleSheet.create({
-    container:{
-        backgroundColor:"#F5F5F5",
-        flex:1,
-    },
-   
-   
-    wellcometext:{
-        textAlign:"center",
-        fontSize:45,
-        fontWeight:"500",
-        color:"#262626",
-    },
-    
-   inputcontainer:{
-    backgroundColor:"#FFFFFF",
-    flexDirection:"row",
-    borderRadius:20,
-    marginHorizontal:40,
-    evevation:10,
-    marginVertical:20,
-    alignItems:"center",
-    height:50,
-   },
-
-Textinput:{
-flex:1,
-},
-forgetpasswordtext:{
-    color:"#BEBEBE",
-    textAlign:"right",
-    width:"90%",
-    fontSize:15,
-},
 
 
-footertext:{
-    color:"#262626",
-    textAlign:"center",
-    fontSize:15,
-    marginTop:40,
-},
-})
+}) 
