@@ -1,4 +1,4 @@
-import {Button,Image,StyleSheet, Text, View, } from 'react-native'
+import {Button,Image,StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
 import { useNavigation } from '@react-navigation/native'
@@ -7,9 +7,17 @@ const WelcomeScreen = () => {
 const handleRegister =() =>{
     navigation.navigate("Login");
 }
-    
+const handleSignup =() =>{
+  navigation.navigate("Signup");
+}
+const handleGuestMode =() =>{
+  navigation.navigate("GuestMode");
+}
   return (
     <View  style={styles.mainContainer}>
+      <TouchableOpacity style={{borderWidth:2,borderColor:'black',maxWidth:'40%',borderRadius:7,top:200,left:240,backgroundColor:'black',}} onPress={handleGuestMode}>
+      <Text style={{color:'#fff',textAlign:'center'}} > Guest mode</Text>
+      </TouchableOpacity>
     <Text style={{
       fontSize:40,
       fontWeight:'500',
@@ -40,9 +48,20 @@ const handleRegister =() =>{
 }>
    
     <Button title={'Login'} color={'black'} onPress={handleRegister} />
-   
+     {/* title={'Signup'} color={'black'} onPress={handleSignup} /> */}
+     <View style={{flexDirection:'row',top:20}} >
+   <Text>
+    you don't have account   
+   </Text>
+   <Text>
+   <Text style={{fontSize:15,color:'#ff206e'}} onPress={handleSignup} >
+ signup ?
+   </Text>
+   </Text>
+     </View>
 </View>
     </View>
+
 
 
   )
