@@ -1,93 +1,79 @@
-import {Button,Image,StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-
+import Header from '../Header'
 import { useNavigation } from '@react-navigation/native'
+import Footer from '../Footer'
+
+
 const WelcomeScreen = () => {
-    const navigation =useNavigation();
-const handleRegister =() =>{
-    navigation.navigate("Login");
-}
-const handleSignup =() =>{
-  navigation.navigate("Signup");
-}
-const handleGuestMode =() =>{
-  navigation.navigate("GuestMode");
-}
+  const navigation=useNavigation();
+  const handleGuest=()=>{
+    navigation.navigate('GuestMode')
+  }
+  const handlelogi=()=>{
+    navigation.navigate('Login')
+  }
+  const handlesubmi=()=>{
+    navigation.navigate("Signup")
+  }
   return (
-    <View  style={styles.mainContainer}>
-      <TouchableOpacity style={{borderWidth:2,borderColor:'black',maxWidth:'40%',borderRadius:7,top:200,left:240,backgroundColor:'black',}} onPress={handleGuestMode}>
-      <Text style={{color:'#fff',textAlign:'center'}} > Guest mode</Text>
-      </TouchableOpacity>
-    <Text style={{
-      fontSize:40,
-      fontWeight:'500',
-      color:'#e8f0ff',
-      top:60,
-      left:20,
-    }}>Welcome to Limat</Text>
-     <Image source={require('../constants/download(2).png')} style={{
-      width:50,
-      height:50,
-      top:150,
-      left:50,
-     }}/>
-  <Text style={{
-    fontWeight:'500',
-    color:'white',
-    top:120,
-    left:100,
-  }}>Limat It Solutions</Text>
-
-      <View  >
-      <Text style={styles.F1style}> Let's  Get</Text>
-     <Text style={styles.F1style}>Started </Text>
-
-     </View>
-     <Text style={{color:'white',opacity:0.5,top:'35%',left:'10%'}}>Supported with Care,Logged with ease</Text>
-<View style={styles.button
-}>
-   
-    <Button title={'Login'} color={'black'} onPress={handleRegister} />
-     {/* title={'Signup'} color={'black'} onPress={handleSignup} /> */}
-     <View style={{flexDirection:'row',top:20}} >
-   <Text>
-    you don't have account   
-   </Text>
-   <Text>
-   <Text style={{fontSize:15,color:'#ff206e'}} onPress={handleSignup} >
- signup ?
-   </Text>
-   </Text>
-     </View>
-</View>
+    <View style={{backgroundColor:"#59ABC9",flex:1}}>
+    <Header/>
+    <Text style={styles.weltext}>WELCOME TO LIMAT</Text>
+    <Pressable>
+    <Text style={styles.gueText} onPress={handleGuest}>Continue As Guest</Text>
+    </Pressable>
+    <View>
+      <Pressable style={styles.logibut} onPress={handlelogi}>
+        <Text style={{ color:"#59ABC9"}}> Already have an account? LOGIN</Text>
+      </Pressable>
+      <Pressable  onPress={handlesubmi}>
+        <Text style={{ color:"#fff",textAlign:'center',textDecorationLine:'underline',top:220}}> New? Register Here !</Text>
+      </Pressable>
     </View>
-
-
-
+<Footer/>
+    </View>
   )
 }
+
 export default WelcomeScreen
 
 const styles = StyleSheet.create({
-    mainContainer:{
-        flex:1,
-        backgroundColor:'#087A9F',
-      },
-      F1style:{
-      fontSize:50,
-      fontWeight:'700',
-      color :'#fffaff',
-      textAlign:'center',
-      justifyContent:'center',
-      alignItems:'center',
-      top:'150%',
-      right:'20%',
-      },
-      button:{
-        top:'40%',
-width:'60%',
-left:'20%',
-borderRadius:10,
-      }
-      
+  weltext:{
+    fontSize:25,
+    textAlign:'center',
+    top:50,
+    fontWeight:'500',
+   
+    color:'#e8f0ff'
+
+  },
+  gueText:{
+    fontSize:20,
+    textAlign:'center',
+    fontWeight:'400',
+    textShadowColor:'#A2A1B4',
+    textShadowRadius:10,
+    textShadowOffset:{width:5,height:3},
+    color:'#fff',
+    top:90,
+    left:100,
+    borderWidth:1,
+    borderColor:'#fff',
+    borderRadius:10,
+    width:200,
+
+  },
+  logibut:{
+    borderWidth:2,
+      borderColor:'#fff',
+      width:250,
+      padding:18,
+      top:170,
+      left:80,
+      backgroundColor:'#fff',
+      borderRadius:5,
+     
+
+  }
 })

@@ -15,7 +15,7 @@ const Signupscreen = () => {
     <View>
         
        <View style={{top:50}}>
-      <Text style={{fontSize:30,fontWeight:600,color:'navy',textAlign:'center',}}>LIMAT</Text>
+      <Text style={{fontSize:30,fontWeight:600,color:"#59ABC9",textAlign:'center',}}>LIMAT</Text>
       <Text style={{fontSize:23,fontWeight:500,color:'black', left:30}}>Create Account</Text>
       <Text style={{top:25,left:80,color:'black'}}>User Name :</Text>
 <TextInput type="text" placeholder='User Name'
@@ -36,9 +36,9 @@ style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'c
     </View>
     
       <View style={{width:'40%',borderRadius:18,top:130,left:100}}>
-   <Button title='Create account' color='navy' type='submit' onPress={handlehome} required/>
+   <Button title='Create account' color="#59ABC9" type='submit' onPress={handlehome} required/>
    </View>
-   <Text style={{top:150,left:250, textDecorationLine:'underline',color:'black'}} onPress={()=>{handleRegister()}} > back login page</Text>
+   <Text style={{top:150,left:250, textDecorationLine:'underline',color:"#59ABC9"}} onPress={()=>{handleRegister()}} > back login page</Text>
       </View>
   
 
