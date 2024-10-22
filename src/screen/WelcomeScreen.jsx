@@ -20,9 +20,9 @@ const WelcomeScreen = () => {
     <View style={{backgroundColor:"#59ABC9",flex:1}}>
     <Header/>
     <Text style={styles.weltext}>WELCOME TO LIMAT</Text>
-    <Pressable>
-    <Text style={styles.gueText} onPress={handleGuest}>Continue As Guest</Text>
-    </Pressable>
+   
+    <Text style={styles.gueText} onPress={()=>handleGuest()}>Continue As Guest</Text>
+    
     <View>
       <Pressable style={styles.logibut} onPress={handlelogi}>
         <Text style={{ color:"#59ABC9"}}> Already have an account? LOGIN</Text>
