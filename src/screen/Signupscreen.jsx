@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,TextInput,Button } from 'react-native'
+import { Text, View,TextInput,Button } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { useNavigation } from '@react-navigation/native'
@@ -48,4 +48,3 @@ style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'c
 
 export default Signupscreen
 
-const styles = StyleSheet.create({})

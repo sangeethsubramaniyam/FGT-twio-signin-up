@@ -1,6 +1,6 @@
 import {  Text, View } from 'react-native';
 
-const GuestMode = () => {
+const GuestScreen = () => {
 
 
       
@@ -14,4 +14,4 @@ const GuestMode = () => {
   )
 }
 
-export default GuestMode
+export default GuestScreen

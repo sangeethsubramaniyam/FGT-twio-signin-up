@@ -1,12 +1,12 @@
 
-import { StyleSheet,Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './src/screen/LoginScreen';
 import WelcomeScreen from './src/screen/WelcomeScreen';
 import Signupscreen from './src/screen/Signupscreen';
-import GuestMode from './src/screen/GuestMode';
+import GuestScreen from './src/screen/GuestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +21,7 @@ const App = () => {
        <Stack.Screen name="Signup" component={Signupscreen}
        />
        
-        <Stack.Screen name="GuestMode" component={GuestMode}
+        <Stack.Screen name="Guestpage" component={GuestScreen}
        /> 
       
         

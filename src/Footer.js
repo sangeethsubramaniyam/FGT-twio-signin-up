@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 const Footer = () => {
   return (
     <View >
-    <View style={{flexDirection:'row',top:400,justifyContent:'space-around',flext:2}}>
+    <View style={{flexDirection:'row',top:300,justifyContent:'space-around',}}>
       <TouchableOpacity 
         onPress={()=>Linking.openURL('https://limat-tech.com/')} >
         <Icon name="web" size={30} color='#fff'/>

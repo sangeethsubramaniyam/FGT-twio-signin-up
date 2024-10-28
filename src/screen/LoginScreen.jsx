@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, View,Text, TextInput,Button } from 'react-native'
 
-const Login = () => {
+const LoginScreen = () => {
   const navigation =useNavigation();
   const handleSignup =() =>{
     navigation.navigate("Signup");
@@ -27,7 +27,7 @@ style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'c
   ) 
 }
 
-export default Login
+export default LoginScreen
 
 const styles = StyleSheet.create({
 

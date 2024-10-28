@@ -6,35 +6,39 @@ import Footer from '../Footer'
 
 
 const WelcomeScreen = () => {
-  const navigation=useNavigation();
-  const handleGuest=()=>{
-    navigation.navigate('GuestMode')
-  }
-  const handlelogi=()=>{
+
+  
+const navigation=useNavigation();
+  const handlelogi = () => {
     navigation.navigate('Login')
-  }
-  const handlesubmi=()=>{
+  };
+  const handlesubmi = () => {
     navigation.navigate("Signup")
-  }
+  };
+  const magicGuest = () => {
+    navigation.navigate('Guestpage')
+  };
   return (
     <View style={{backgroundColor:"#59ABC9",flex:1}}>
     <Header/>
-    <Text style={styles.weltext}>WELCOME TO LIMAT</Text>
+    <Text style={styles.weltext}>WELCOME TO LIMAT TECHNOLOGY SOLUTIONS</Text>
+ <Pressable  >
+    <Text style={styles.gueText} onPress={magicGuest}>Continue As Guest
+    </Text>
+    </Pressable>
    
-    <Text style={styles.gueText} onPress={()=>handleGuest()}>Continue As Guest</Text>
-    
-    <View>
-      <Pressable style={styles.logibut} onPress={handlelogi}>
-        <Text style={{ color:"#59ABC9"}}> Already have an account? LOGIN</Text>
+      
+        <Text style={styles.logibut} onPress={handlelogi}> Already have an account? LOGIN</Text>
+     
+      <Pressable>
+        <Text style={{ color:"#fff",textAlign:'center',textDecorationLine:'underline',top:220}} onPress={handlesubmi}> New? Register Here !</Text>
       </Pressable>
-      <Pressable  onPress={handlesubmi}>
-        <Text style={{ color:"#fff",textAlign:'center',textDecorationLine:'underline',top:220}}> New? Register Here !</Text>
-      </Pressable>
-    </View>
+
 <Footer/>
     </View>
+
   )
-}
+};
 
 export default WelcomeScreen
 
@@ -44,36 +48,32 @@ const styles = StyleSheet.create({
     textAlign:'center',
     top:50,
     fontWeight:'500',
-   
     color:'#e8f0ff'
 
   },
+  
   gueText:{
     fontSize:20,
     textAlign:'center',
     fontWeight:'400',
-    textShadowColor:'#A2A1B4',
-    textShadowRadius:10,
-    textShadowOffset:{width:5,height:3},
     color:'#fff',
-    top:90,
-    left:100,
-    borderWidth:1,
-    borderColor:'#fff',
     borderRadius:10,
     width:200,
-
+    // textDecorationLine:'underline',
+    borderWidth: 2,   
+    borderColor: '#fff',
+    padding: 5,     
+    marginLeft:95,
+    marginTop:100,
   },
   logibut:{
-    borderWidth:2,
-      borderColor:'#fff',
       width:250,
       padding:18,
-      top:170,
+      top:100,
       left:80,
       backgroundColor:'#fff',
       borderRadius:5,
-     
+     color:"#59ABC9"
 
   }
 })
