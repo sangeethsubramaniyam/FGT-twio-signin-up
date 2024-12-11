@@ -9,6 +9,7 @@ const crypto = require('crypto'); // For generating reset tokens
 const twilio = require('twilio');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library'); // Google auth library
+const nodemailer = require('nodemailer');
 
 
 
@@ -19,54 +20,23 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '1099178@jR',
-  database: 'signup'
+  database: 'passkey'
 });
 
-//  Google OAuth2 client
-// const client1 = new OAuth2Client('1039540380949-2etj9m5hqso114rp0st0aulu02gtmtop.apps.googleusercontent.com');
-
-// // Secret key for JWT
-// const JWT_SECRET_KEY = 'sangee';
-
-// // Google Sign-in Route
-// app.post('/google-login', async (req, res) => {
-//   const { token } = req.body;
-
-//   try {
-//     const ticket = await client1.verifyIdToken({
-//       idToken: token,
-//       audience: '1039540380949-2etj9m5hqso114rp0st0aulu02gtmtop.apps.googleusercontent.com',  // Specify your client ID
-//     });
-
-//     const payload = ticket.getPayload();
-//     const { sub: googleId, name, email } = payload;
-
-//     // Check if the user exists in the database
-//     const [rows] = await pool.query('SELECT * FROM users WHERE googleId = ?', [googleId]);
-
-//     if (rows.length === 0) {
-//       // Register new user if not found
-//       await pool.query('INSERT INTO users (googleId, username, email) VALUES (?, ?, ?)', [googleId, name, email]);
-//     }
-
-//     // Generate JWT Token
-//     const token = jwt.sign({ googleId, email }, JWT_SECRET_KEY, { expiresIn: '1h' });
-
-//     res.status(200).json({ message: 'Login successful', token });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// });
 
 app.use(cors());
 app.use(bodyParser.json());
 
 
 
-
-
-
+// Create transporter for sending emails
+const transporter = nodemailer.createTransport({
+  service: 'gmail', 
+  auth: {
+    user: 'manijosup178@gmail.com', // Replace with your email
+    pass: 'fxpluvwrtgcvskqw', // Replace with your email password or app-specific password
+  },
+});
 
 
 app.post('/google-login', async (req, res) => {
@@ -98,19 +68,8 @@ app.post('/google-login', async (req, res) => {
 
 
 
-
-
-// app.use(cors());
-// app.use(bodyParser.json());
-// add demo ooo oo
- //
-
-
-
-
-
-const accountSid = 'AC45b3e13210432ee9ae595307d60bbebc'; // Replace with your Account SID
-const authToken = 'ece92f1cbfa95b4c284236a23cf491fa';   // Replace with your Auth Token
+const accountSid ='AC45b3e13210432ee9ae595307d60bbebc'; // Replace with your Account SID
+const authToken = 'a0c1bfd84a0b9c09d88dd8345ea150c6';   // Replace with your Auth Token
 const serviceId = 'VA181e8ad9cb3d3e52d9b95130e007b122';  // Replace with your Service SID
 
 const client = twilio(accountSid, authToken);
@@ -176,30 +135,59 @@ app.post('/forgot-password', async (req, res) => {
       return res.status(404).json({ message: 'Email not found' });
     }
 
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const tokenExpiry = new Date(Date.now() + 3600000); // 1 hour from now
+    const resetToken = crypto.randomBytes(4).toString('hex').slice(0,6);
+    // const tokenExpiry = new Date(Date.now() + 18000); 
+    const tokenExpiry = new Date();
+    tokenExpiry.setHours(tokenExpiry.getHours() + 1); // 1 hour from now
 
     await pool.query('UPDATE users SET resetToken = ?, tokenExpiry = ? WHERE email = ?', [resetToken, tokenExpiry, email]);
 
-    // Simulate sending an email
-    console.log(`Password reset token for ${email}: ${resetToken}`);
+   
+    // Email content
+    const mailOptions = {
+      from: 'manijosup178@gmail.com', // Sender address
+      to: email, // Recipient address
+      subject: 'Password Reset Request',
+      text: `You requested to reset your password. Use the following token: ${resetToken}`,
+    };
 
-    res.status(200).json({ message: 'Password reset token sent to email' });
+    // Send email
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error('Email sending error:', err);
+        return res.status(500).json({ message: 'Error sending email' });
+      }
+      // console.log('Email sent:', info.response);
+      //  console.log("your token send successfully");
+      
+      res.status(200).json({ message: 'Password reset token sent to email' });
+    });
   } catch (error) {
     console.error('Database error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
+  //
+  
+
 });
 
-// Reset password
 app.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
 
+  console.log("Reset Password Request Received", { token, newPassword });
+
   try {
     const [rows] = await pool.query('SELECT * FROM users WHERE resetToken = ?', [token]);
+    // console.log("Database rows:", rows);
 
-    if (rows.length === 0 || new Date() > new Date(rows[0].tokenExpiry)) {
-      return res.status(400).json({ message: 'Invalid or expired token' });
+    if (rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid token' });
+    }
+    // const tokenExpiry = new Date();
+    // tokenExpiry.setHours(tokenExpiry.getHours() + 1); 
+    
+    if (new Date() > new Date(rows[0].tokenExpiry)) {
+      return res.status(400).json({ message: 'Expired token' });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -211,7 +199,7 @@ app.post('/reset-password', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
+ 
 // Endpoint to send OTP
 app.post('/send-otp', async (req, res) => {
   const { phoneNumber } = req.body;
