@@ -1,60 +1,50 @@
-import { Text, View,TextInput,Button ,Alert } from 'react-native'
+import { Text, View,TextInput,Button ,Alert,StyleSheet} from 'react-native'
 import React,{ useState} from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { useNavigation } from '@react-navigation/native'
-
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Signupscreen = () => {
-  const navigation =useNavigation();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignup 
- = async () => {
-  if (!username || !email || !password) {
-    Alert.alert('Error', 'Please fill all the fields.');
-    return; // Stop further execution if any field is empty
-  }
+const navigation=useNavigation();
+const handleResigister = () =>{
+  navigation.navigate('Login')
+}
 
-    try {
-      const response = await axios.post('http://10.0.2.2:3000/signup',   
- { // Ensure correct URL
-        username,
-        email,
-        password,
-      });
+  const handleSignup = async () => {
 
-      // const data = await response.json();
-      const data = response.data;
-
-      if (response.status === 200) //0k
-      
-      {
-        // Handle successful signup 
-        console.log('Signup successful:', data);
-        Alert.alert('Success', 'User registered successfully');
-        navigation.navigate('Login')
-        // Navigate to the next screen or show a success message
-      } else {
-        // Handle error response
-        console.error('Signup failed:', data.error);
-        Alert.alert('Error', 'Something went wrong. Please try again.');
-
-        // Display an error message to the user
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-      Alert.alert('Error', 'Something went wrong. Please try again.');
-      // Display an error message to the user
-    }
-  };
+if (!username || !email || !password) 
+  {
+       Alert.alert('Error', 'Please fill in all fields.');
+       return;
+     }
+ 
+     try {
+       const response = await axios.post('http://10.0.2.2:3000/signup', {
+         username,
+         email,
+         password,
+       });
+ 
+       if (response.status === 200) {
+         Alert.alert('Success', 'User registered successfully!');
+       } else {
+         Alert.alert('Error', 'Registration failed. Please try again later.');
+       }
+     } catch (error) {
+       console.error('Signup error:', error);
+       Alert.alert('Error', 'An error occurred. Please try again later.');
+     }
+   };
+ 
   return (
     <View>
         
-       <View style={{top:50}}>
+       <View style={{top:20}}>
       <Text style={{fontSize:30,fontWeight:600,color:"#59ABC9",textAlign:'center',}}>LIMAT</Text>
       <Text style={{fontSize:23,fontWeight:500,color:'black', left:30}}>Create Account</Text>
       <Text style={{top:25,left:80,color:'black'}}>User Name :</Text>
@@ -84,7 +74,8 @@ style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'c
       <View style={{width:'40%',borderRadius:18,top:130,left:100}}>
    <Button title='Create account' color="#59ABC9" type='submit' onPress={handleSignup} required/>
    </View>
-   <Text style={{top:150,left:250, textDecorationLine:'underline',color:"#59ABC9"}} onPress={()=>{handleRegister()}} > back login page</Text>
+  
+   <Text style={{top:150,left:250, textDecorationLine:'underline',color:"#59ABC9"}} onPress={()=>{handleResigister()}} > back login page</Text>
       </View>
   
 
@@ -94,44 +85,7 @@ style={{backgroundColor:'#fff',width:'70%',justifyContent:'center',alignItems:'c
 
 export default Signupscreen
 
-// import React, { useState } from 'react';
-// import { View, TextInput, Button, Alert } from 'react-native';
-// import { signup } from './api'; // Import the signup function from api.js
+const styles = StyleSheet.create({
 
-// const SignUpscreen = () => {
-//   const [username, setUsername] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-
-//   // Function to handle signup
-//   const [username, setUsername] = useState('');
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   return (
-//     <View>
-//       {/* Input fields for username, email, and password */}
-//       <TextInput
-//         placeholder="Username"
-//         value={username}
-//         onChangeText={setUsername}
-//       />
-//       <TextInput
-//         placeholder="Email"
-//         value={email}
-//         onChangeText={setEmail}
-//         keyboardType="email-address"
-//       />
-//       <TextInput
-//         placeholder="Password"
-//         value={password}
-//         onChangeText={setPassword}
-//         secureTextEntry
-//       />
-      
-//       {/* Signup button */}
-//       <Button title="Sign Up" onPress={handleSignup} />
-//     </View>
-//   );
-// };
-
-// export default SignUpscreen;
+ 
+}) 

@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import Header from '../Header'
 import { useNavigation } from '@react-navigation/native'
 import Footer from '../Footer'
+import LockHome from '../LockHome'
 
 
 const WelcomeScreen = () => {
@@ -20,7 +20,7 @@ const navigation=useNavigation();
   };
   return (
     <View style={{backgroundColor:"#59ABC9",flex:1}}>
-    <Header/>
+    <LockHome/>
     <Text style={styles.weltext}>WELCOME TO LIMAT TECHNOLOGY SOLUTIONS</Text>
  <Pressable  >
     <Text style={styles.gueText} onPress={magicGuest}>Continue As Guest
@@ -31,7 +31,7 @@ const navigation=useNavigation();
         <Text style={styles.logibut} onPress={handlelogi}> Already have an account? LOGIN</Text>
      
       <Pressable>
-        <Text style={{ color:"#fff",textAlign:'center',textDecorationLine:'underline',top:220}} onPress={handlesubmi}> New? Register Here !</Text>
+        <Text style={{ color:"#fff",textAlign:'center',textDecorationLine:'underline',top:220,fontSize:18}} onPress={handlesubmi}> New? Register Here !</Text>
       </Pressable>
 
 <Footer/>
