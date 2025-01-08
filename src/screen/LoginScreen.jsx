@@ -1,7 +1,11 @@
+
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useState } from 'react';
 import { StyleSheet, View,Text, TextInput,Button,Alert,Pressable } from 'react-native'
+import GoogleScreen from './GoogleScreen';
+// import GoogleLogin from '../GoogleSignIn';
+// import GoogleSigninScreen from '../GoogleSigninScreen';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -68,9 +72,14 @@ value={password}
         <Text style={styles.orText}>OR</Text>
         <View style={styles.line} />
       </View>
+
       <Pressable>
     <Text style={styles.loginphone} onPress={()=>navigation.navigate('phonenumber')}>login with phone number
     </Text>
+    <View style ={{marginLeft:100,marginTop:40
+    }}>
+     <GoogleScreen/>
+    </View>
     </Pressable>
     <View style={{flexDirection:'row',top:50}}>
    <Text style={{top:110,left:100}}> you don't have account </Text>
