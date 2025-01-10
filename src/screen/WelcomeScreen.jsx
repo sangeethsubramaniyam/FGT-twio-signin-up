@@ -18,9 +18,9 @@ const navigation=useNavigation();
   const magicGuest = () => {
     navigation.navigate('Guestpage')
   };
-  const magicadmin =() => {
-    navigation.navigate('admin')
-  };
+  // const magicadmin =() => {
+  //   navigation.navigate('admin')
+  // };
   return (
     <View style={{backgroundColor:"#59ABC9",flex:1}}>
     <LockHome/>
@@ -36,9 +36,9 @@ const navigation=useNavigation();
       <Pressable>
         <Text style={{ color:"#fff",textAlign:'center',textDecorationLine:'underline',top:220,fontSize:18}} onPress={handlesubmi}> New? Register Here !</Text>
       </Pressable>
-  <View>
+  {/* <View>
     <Text onPress={magicadmin}                            >admin user</Text>
-  </View>
+  </View> */}
 <Footer/>
 
     </View>

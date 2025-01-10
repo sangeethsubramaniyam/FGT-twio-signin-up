@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center', // Center the text and icon
-    backgroundColor: '#4285F4', // Google blue color
+    // backgroundColor: '#4285F4', // Google blue color
+    backgroundColor:'#59ABC9',
     paddingVertical: 9,
     paddingHorizontal: 12,
     borderRadius: 8,
