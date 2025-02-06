@@ -1,167 +1,105 @@
 
-// import React, { useContext, useState, useEffect } from 'react';
-// import { View, Text, TouchableOpacity, Modal, StyleSheet, Alert, TextInput, FlatList } from 'react-native';
-// import { UserContext } from '../assets/UserContext'; // Correctly importing UserContext
-// import axios from 'axios';
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet, Alert } from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
+// import { useUser } from '../assets/UserContext';
+// import LinearGradient from 'react-native-linear-gradient';
+// import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
 
-// const HomeScreen = ({ navigation }) => {
-//   const { user, previousUsers, login, updatePreviousUsers } = useContext(UserContext);
-
+// const HomeScreen = () => {
+//   const { user, previousUsers, login, updatePreviousUsers } = useUser();
+//   const navigation = useNavigation();
 //   const [modalVisible, setModalVisible] = useState(false);
-//   const [selectedUser, setSelectedUser] = useState(null);
-//   const [password, setPassword] = useState('');
-//   const [loading, setLoading] = useState(false);
-//   const [isSwitchAccount, setIsSwitchAccount] = useState(false); // To track whether we're switching accounts or logging in
+//   const [isSwitchAccount, setIsSwitchAccount] = useState(false);
 
 //   useEffect(() => {
 //     if (user && !previousUsers.some((u) => u.username === user.username)) {
-//       updatePreviousUsers(user); // Add new user to previousUsers
+//       updatePreviousUsers(user);
 //     }
 //   }, [user, previousUsers, updatePreviousUsers]);
 
-//   const handlePasswordSubmit = async () => {
-//     if (!password) {
-//       Alert.alert('Input Error', 'Please enter a password.');
-//       return;
-//     }
-
-//     setLoading(true);
-
-//     try {
-//       const loginResponse = await axios.post('http://10.0.2.2:3000/login', {
-//         username: selectedUser.username,
-//         password,
-//       });
-
-//       if (loginResponse.data.message === 'Login successful') {
-//         login(selectedUser);
-//         Alert.alert('Success', `Logged in as ${selectedUser.username}`);
-//         setModalVisible(false); // Close modal
-//         setPassword(''); // Reset password field
-//         setSelectedUser(null); // Clear selected user
-//       } else {
-//         Alert.alert('Login Failed', 'Incorrect password');
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       Alert.alert('Error', 'Something went wrong during login.');
-//     } finally {
-//       setLoading(false);
-//     }
+//   const handleSelectAccount = (account) => {
+//     login(account);
+//     Alert.alert('Switched Account', `You are now logged in as ${account.username}`);
+//     setModalVisible(false);
+//     setIsSwitchAccount(false);
 //   };
 
-//   const switchToUser = (user) => {
-//     login(user); // Directly switch to the selected user
-//     Alert.alert('Switched Account', `You are now logged in as ${user.username}`);
-//     setModalVisible(false); // Close the modal
+//   const handleAddAccount = () => {
+//     setModalVisible(false);
+//     navigation.navigate('Login');
 //   };
-
-//   const renderUserOption = (item, isSwitchAccount = false) => (
-//     <TouchableOpacity
-//       key={item.username}
-//       style={styles.userOptionButton}
-//       onPress={() => {
-//         if (isSwitchAccount) {
-//           switchToUser(item);
-//         } else {
-//           setSelectedUser(item);
-//         }
-//       }}
-//     >
-//       <Text style={styles.userOptionButtonText}>{item.username}</Text>
-//     </TouchableOpacity>
-//   );
 
 //   return (
-//     <View style={{ flex: 1, padding: 20 }}>
-//       <Text style={styles.welcomeText}>
-//         {user ? `Welcome, ${user.username}` : 'User not logged in'}
-//       </Text>
+//     <View style={styles.container}>
+//       <Text style={styles.welcomeText}>{user ? `Welcome, ${user.username}!` : 'User not logged in'}</Text>
 
-//       {/* Footer */}
-//       <View style={styles.footer}>
-//         <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
-//           <Text style={styles.plusButtonText}>+</Text>
-//         </TouchableOpacity>
-//       </View>
+//       {/* Button to Open Account Options */}
+//       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
+//         <Text style={styles.plusIcon}>+</Text>
+//       </TouchableOpacity>
 
-//       {/* Unified Modal */}
+//       {/* Modal for Switching Accounts */}
 //       <Modal
 //         visible={modalVisible}
 //         animationType="slide"
 //         transparent={true}
-//         onRequestClose={() => setModalVisible(false)}
+//         onRequestClose={() => {
+//           if (isSwitchAccount) {
+//             setIsSwitchAccount(false);
+//           } else {
+//             setModalVisible(false);
+//           }
+//         }}
 //       >
-//         <View style={styles.modalBackground}>
-//           <View style={styles.modalContainer}>
-//             <Text style={styles.modalTitle}>
-//               {isSwitchAccount ? 'Switch Account' : 'Login Existing Account'}
-//             </Text>
+//         <View style={styles.modalContainer}>
+//           <LinearGradient colors={["#59ABC9", "#59ABC9"]} style={styles.modalContent}>
+//             <Text style={styles.switchTitle}>{isSwitchAccount ? 'Switch Account' : 'Account Options'}</Text>
 
-//             <FlatList
-//               data={previousUsers || []}
-//               renderItem={({ item }) => renderUserOption(item, isSwitchAccount)}
-//               keyExtractor={(item) => item.username}
-//               style={styles.userList}
-//             />
-
-//             {/* Show password prompt if logging in */}
-//             {!isSwitchAccount && selectedUser && (
-//               <View style={styles.passwordPrompt}>
-//                 <Text>Enter password for {selectedUser.username}</Text>
-//                 <TextInput
-//                   style={styles.input}
-//                   value={password}
-//                   onChangeText={setPassword}
-//                   secureTextEntry
-//                   placeholder="Password"
-//                 />
-//                 <TouchableOpacity
-//                   onPress={handlePasswordSubmit}
-//                   style={styles.button}
-//                   disabled={loading}
-//                 >
-//                   <Text style={styles.buttonText}>
-//                     {loading ? 'Logging in...' : 'Submit'}
-//                   </Text>
+//             {!isSwitchAccount ? (
+//               <>
+//                 <TouchableOpacity onPress={() => setIsSwitchAccount(true)} style={styles.optionButton}>
+//                   <Text style={styles.optionText}>Switch Account</Text>
 //                 </TouchableOpacity>
-//               </View>
+//                 <TouchableOpacity onPress={handleAddAccount} style={styles.optionButton}>
+//                   <Text style={styles.optionText}>Add Account</Text>
+//                 </TouchableOpacity>
+//               </>
+//             ) : (
+//               <FlatList
+//                 data={previousUsers}
+//                 keyExtractor={(item, index) => index.toString()}
+//                 renderItem={({ item }) => (
+//                   <TouchableOpacity onPress={() => handleSelectAccount(item)} style={styles.accountItem}>
+//                     <View style={styles.profileContainer}>
+//                       <View style={styles.profileIcon}>
+//                         <Text style={styles.profileText}>{item.username.charAt(0).toUpperCase()}</Text>
+//                       </View>
+//                       <Text style={styles.accountText}>{item.username}</Text>
+//                     </View>
+//                     {/* Switch Icon placed next to the username */}
+//                     <TouchableOpacity onPress={() => handleSelectAccount(item)} style={styles.switchButton}>
+//                       {/* <Ionicons name="swap-horizontal" size={24} color="#59ABC9" /> */}
+//                                   <Icon name="refresh" size={24} color="#59ABC9"/>
+                      
+//                     </TouchableOpacity>
+//                   </TouchableOpacity>
+//                 )}
+//                 ListEmptyComponent={<Text style={styles.noAccounts}>No previous accounts found.</Text>}
+//               />
 //             )}
 
-//             {/* Add New Account Button */}
-//             <TouchableOpacity
-//               style={styles.addAccountButton}
-//               onPress={() => {
+//             {/* Cancel Button with New Styling */}
+//             <TouchableOpacity onPress={() => {
+//               if (isSwitchAccount) {
+//                 setIsSwitchAccount(false);
+//               } else {
 //                 setModalVisible(false);
-//                 navigation.navigate('Signup'); // Navigate to Signup screen
-//               }}
-//             >
-//               <Text style={styles.addAccountButtonText}>Add New Limat Account</Text>
+//               }
+//             }} style={styles.cancelButton}>
+//               <Text style={styles.cancelText}>{isSwitchAccount ? 'Back' : 'Close'}</Text>
 //             </TouchableOpacity>
-
-//             {/* Switch Account Button */}
-//             {!isSwitchAccount && (
-//               <TouchableOpacity
-//                 style={styles.switchAccountButton}
-//                 onPress={() => setIsSwitchAccount(true)}
-//               >
-//                 <Text style={styles.switchAccountButtonText}>Switch Account</Text>
-//               </TouchableOpacity>
-//             )}
-
-//             {/* Close Modal Button */}
-//             <TouchableOpacity
-//               style={styles.modalCloseButton}
-//               onPress={() => {
-//                 setModalVisible(false);
-//                 setSelectedUser(null); // Reset selected user
-//                 setPassword(''); // Clear password
-//                 setIsSwitchAccount(false); // Reset switch account state
-//               }}
-//             >
-//               <Text style={styles.modalCloseButtonText}>Close</Text>
-//             </TouchableOpacity>
-//           </View>
+//           </LinearGradient>
 //         </View>
 //       </Modal>
 //     </View>
@@ -169,306 +107,247 @@
 // };
 
 // const styles = StyleSheet.create({
-//   welcomeText: {
-//     color: '#000',
-//     fontSize: 20,
-//     textAlign: 'center',
-//     marginTop: 80,
-//   },
-//   footer: {
-//     position: 'absolute',
-//     bottom: 20,
-//     width: '100%',
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   plusButton: {
-//     backgroundColor: '#59ABC9',
-//     padding: 15,
-//     borderRadius: 30,
-//     width: 70,
-//     height: 70,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderWidth: 2,
-//     borderColor: '#fff',
-//   },
-//   plusButtonText: {
-//     color: 'white',
-//     fontSize: 30,
-//     fontWeight: 'bold',
-//   },
-//   modalBackground: {
+//   container: {
 //     flex: 1,
 //     justifyContent: 'center',
 //     alignItems: 'center',
-//     backgroundColor: 'rgba(0,0,0,0.7)',
-//     padding: 20,
-//   },
-//   modalContainer: {
-//     width: '90%',
-//     padding: 20,
 //     backgroundColor: '#fff',
-//     borderRadius: 15,
-//     elevation: 10,
-//     alignItems: 'center',
 //   },
-//   modalTitle: {
+//   welcomeText: {
 //     fontSize: 22,
-//     fontWeight: 'bold',
-//     marginBottom: 15,
+//     fontWeight: '600',
+//     marginBottom: 20,
 //     color: '#59ABC9',
 //   },
-//   userList: {
-//     width: '100%',
-//     marginBottom: 20,
-//   },
-//   userOptionButton: {
-//     padding: 15,
-//     marginBottom: 10,
-//     borderWidth: 1,
-//     borderColor: '#ccc',
-//     borderRadius: 10,
-//     backgroundColor: '#f9f9f9',
-//     alignItems: 'center',
-//   },
-//   userOptionButtonText: {
-//     fontSize: 18,
-//     color: '#333',
-//   },
-//   passwordPrompt: {
-//     marginTop: 20,
-//     width: '100%',
-//   },
-//   input: {
-//     width: '100%',
-//     padding: 12,
-//     borderColor: '#ccc',
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     marginBottom: 15,
-//     fontSize: 16,
-//   },
-//   button: {
+//   plusButton: {
+//     padding: 18,
 //     backgroundColor: '#59ABC9',
-//     padding: 12,
-//     borderRadius: 10,
+//     borderRadius: 50,
+//     position: 'absolute',
+//     bottom: 30,
+//     right: 30,
+//     elevation: 10,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 4 },
+//     shadowOpacity: 0.15,
+//     shadowRadius: 6,
+//   },
+//   plusIcon: {
+//     fontSize: 36,
+//     color: '#fff',
+//     fontWeight: 'bold',
+//   },
+//   modalContainer: {
+//     flex: 1,
 //     justifyContent: 'center',
 //     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
 //   },
-//   buttonText: {
-//     color: 'white',
-//     fontSize: 16,
+//   modalContent: {
+//     width: 360,
+//     padding: 20,
+//     borderRadius: 12,
+//     alignItems: 'center',
+//     elevation: 10,
 //   },
-//   addAccountButton: {
-//     padding: 12,
-//     backgroundColor: '#59ABC9',
-//     borderRadius: 5,
-//     marginTop: 10,
-//   },
-//   addAccountButtonText: {
+//   switchTitle: {
+//     fontSize: 24,
+//     fontWeight: '700',
+//     marginBottom: 25,
 //     color: '#fff',
+//   },
+//   optionButton: {
+//     padding: 15,
+//     width: '100%',
+//     alignItems: 'center',
+//     backgroundColor: '#59ABC9',
+//     borderRadius: 8,
+//     marginVertical: 8,
+//     elevation: 2,
+//   },
+//   optionText: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: 'white',
+//   },
+//   accountItem: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     backgroundColor: '#fff',
+//     paddingVertical: 15,
+//     paddingHorizontal: 20,
+//     marginVertical: 5,
+//     borderRadius: 8,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 4,
+//     elevation: 2,
+//   },
+//   profileContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   profileIcon: {
+//     backgroundColor: '#59ABC9',
+//     borderRadius: 30,
+//     width: 40,
+//     height: 40,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginRight: 10,
+//   },
+//   profileText: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: 'white',
+//   },
+//   accountText: {
 //     fontSize: 16,
 //     fontWeight: '600',
+//     color: '#59ABC9',
 //   },
-//   switchAccountButton: {
+//   switchButton: {
+//     paddingHorizontal: 10,
+//     paddingVertical: 5,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#F0F0F0',
+//     borderRadius: 8,
+//     marginLeft: 15,
+//   },
+//   cancelButton: {
+//     marginTop: 20,
 //     padding: 12,
-//     backgroundColor: '#ccc',
-//     borderRadius: 5,
-//     marginTop: 10,
+//     backgroundColor: '#D1D1D1', // Neutral grey for the cancel button
+//     borderRadius: 8,
+//     width: '100%',
+//     alignItems: 'center',
 //   },
-//   switchAccountButtonText: {
-//     color: 'black',
-//     fontSize: 16,
+//   cancelText: {
+//     fontSize: 18,
+//     color: '#595959', // Darker grey for better contrast
 //     fontWeight: '600',
 //   },
-//   modalCloseButton: {
-//     padding: 12,
-//     backgroundColor: '#ccc',
-//     borderRadius: 5,
-//     marginTop: 10,
-//   },
-//   modalCloseButtonText: {
-//     color: 'black',
+//   noAccounts: {
 //     fontSize: 16,
+//     fontWeight: '600',
+//     color: '#7f8c8d',
+//     textAlign: 'center',
+//     marginTop: 20,
 //   },
 // });
 
 // export default HomeScreen;
-
 //
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Alert, TextInput, FlatList } from 'react-native';
-import { UserContext } from '../assets/UserContext'; // Correctly importing UserContext
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../assets/UserContext';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
 
-const HomeScreen = ({ navigation,route}) => {
-  const { user, previousUsers, login, updatePreviousUsers } = useContext(UserContext);
- const { phoneNumber} = route.params || {};
-  const { username } = route.params || {};
-
+const HomeScreen = () => {
+  const { user, previousUsers, login, updatePreviousUsers } = useUser();
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isSwitchAccount, setIsSwitchAccount] = useState(false); // To track whether we're switching accounts or logging in
+  const [isSwitchAccount, setIsSwitchAccount] = useState(false);
 
   useEffect(() => {
     if (user && !previousUsers.some((u) => u.username === user.username)) {
-      updatePreviousUsers(user); // Add new user to previousUsers
+      updatePreviousUsers(user);
     }
   }, [user, previousUsers, updatePreviousUsers]);
 
-  const handlePasswordSubmit = async () => {
-    if (!password) {
-      Alert.alert('Input Error', 'Please enter a password.');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const loginResponse = await axios.post('http://10.0.2.2:3000/login', {
-        username: selectedUser.username,
-        password,
-      });
-
-      if (loginResponse.data.message === 'Login successful') {
-        login(selectedUser);
-        Alert.alert('Success', `Logged in as ${selectedUser.username}`);
-        setModalVisible(false); // Close modal
-        setPassword(''); // Reset password field
-        setSelectedUser(null); // Clear selected user
-      } else {
-        Alert.alert('Login Failed', 'Incorrect password');
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'Something went wrong during login.');
-    } finally {
-      setLoading(false);
-    }
+  const handleSelectAccount = (account) => {
+    login(account);
+    Alert.alert('Switched Account', `You are now logged in as ${account.username}`);
+    setModalVisible(false);
+    setIsSwitchAccount(false);
   };
 
-  const switchToUser = (user) => {
-    login(user); // Directly switch to the selected user
-    Alert.alert('Switched Account', `You are now logged in as ${user.username}`);
-    setModalVisible(false); // Close the modal
+  const handleAddAccount = () => {
+    setModalVisible(false);
+    navigation.navigate('Login');
   };
-
-  const renderUserOption = (item, isSwitchAccount = false) => (
-    <TouchableOpacity
-      key={item.username}
-      style={styles.userOptionButton}
-      onPress={() => {
-        if (isSwitchAccount) {
-          switchToUser(item);
-        } else {
-          setSelectedUser(item);
-        }
-      }}
-    >
-      {/* Profile Picture (First Letter in a Circle) */}
-      <View style={styles.profileCircle}>
-        <Text style={styles.profileText}>{item.username.charAt(0).toUpperCase()}</Text>
-      </View>
-      <Text style={styles.userOptionButtonText}>{item.username}</Text>
-    </TouchableOpacity>
-  );
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-    
-        {/* {user ? `Welcome, ${user.username}` : 'User not logged in'} */}
-     
-            <Text style={styles.welcomeText}>Welcome, {phoneNumber ? `+91${phoneNumber}` : `${user.username}`}!</Text>
-            
+    <View style={styles.container}>
+      <Text style={styles.welcomeText}>{user ? `Welcome, ${user.username}!` : 'User not logged in'}</Text>
 
-      {/* Footer */}
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
-          <Text style={styles.plusButtonText}>+</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Button to Open Account Options */}
+      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.plusButton}>
+        <Text style={styles.plusIcon}>+</Text>
+      </TouchableOpacity>
 
-      {/* Unified Modal */}
+      {/* Modal for Switching Accounts */}
       <Modal
         visible={modalVisible}
         animationType="slide"
         transparent={true}
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => {
+          if (isSwitchAccount) {
+            setIsSwitchAccount(false);
+          } else {
+            setModalVisible(false);
+          }
+        }}
       >
-        <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>
-              {isSwitchAccount ? 'Switch Account' : 'Login Existing Account'}
-            </Text>
+        <View style={styles.modalContainer}>
+          <LinearGradient colors={["#59ABC9", "#59ABC9"]} style={styles.modalContent}>
+            <Text style={styles.switchTitle}>{isSwitchAccount ? 'Switch Account' : 'Account Options'}</Text>
 
-            <FlatList
-              data={previousUsers || []}
-              renderItem={({ item }) => renderUserOption(item, isSwitchAccount)}
-              keyExtractor={(item) => item.username}
-              style={styles.userList}
-            />
-
-            {/* Show password prompt if logging in */}
-            {!isSwitchAccount && selectedUser && (
-              <View style={styles.passwordPrompt}>
-                <Text>Enter password for {selectedUser.username}</Text>
-                <TextInput
-                  style={styles.input}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  placeholder="Password"
-                />
-                <TouchableOpacity
-                  onPress={handlePasswordSubmit}
-                  style={styles.button}
-                  disabled={loading}
-                >
-                  <Text style={styles.buttonText}>
-                    {loading ? 'Logging in...' : 'Submit'}
-                  </Text>
+            {!isSwitchAccount ? (
+              <>
+                <TouchableOpacity onPress={() => setIsSwitchAccount(true)} style={styles.optionButton}>
+                  <Text style={styles.optionText}>Switch Account</Text>
                 </TouchableOpacity>
-              </View>
+                <TouchableOpacity onPress={handleAddAccount} style={styles.optionButton}>
+                <Icon name="plus" size={20} color="white" style={{ marginRight: 8 }} />
+
+                  <Text style={styles.optionText}>Add Account</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <FlatList
+                data={previousUsers}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleSelectAccount(item)} style={styles.accountItem}>
+                    <View style={styles.profileContainer}>
+                      <View style={styles.profileIcon}>
+                        <Text style={styles.profileText}>{item.username.charAt(0).toUpperCase()}</Text>
+                      </View>
+                      <Text style={styles.accountText}>{item.username}</Text>
+                    </View>
+                    {/* Switch Icon placed next to the username */}
+                    <TouchableOpacity onPress={() => handleSelectAccount(item)} style={styles.switchButton}>
+                      <Icon name="user-circle" size={24} color="#59ABC9"/>
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={<Text style={styles.noAccounts}>No previous accounts found.</Text>}
+              />
             )}
 
-            {/* Add New Account Button */}
-            <TouchableOpacity
-              style={styles.addAccountButton}
+            {/* Cancel Button with Cancel Icon */}
+            <TouchableOpacity 
               onPress={() => {
-                setModalVisible(false);
-                navigation.navigate('Login'); // Navigate to Signup screen
-              }}
+                if (isSwitchAccount) {
+                  setIsSwitchAccount(false);
+                } else {
+                  setModalVisible(false);
+                }
+              }} 
+              style={styles.cancelButton}
             >
-              <Text style={styles.addAccountButtonText}>Add Account</Text>
-            </TouchableOpacity>
+                <Text style={styles.cancelText}>Cancel</Text>
 
-            {/* Switch Account Button */}
-            {!isSwitchAccount && (
-              <TouchableOpacity
-                style={styles.switchAccountButton}
-                onPress={() => setIsSwitchAccount(true)}
-              >
-                <Text style={styles.switchAccountButtonText}>Switch Account</Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Close Modal Button */}
-            <TouchableOpacity
-              style={styles.modalCloseButton}
-              onPress={() => {
-                setModalVisible(false);
-                setSelectedUser(null); // Reset selected user
-                setPassword(''); // Clear password
-                setIsSwitchAccount(false); // Reset switch account state
-              }}
-            >
-              <Text style={styles.modalCloseButtonText}>Close</Text>
+              {/* Cancel Icon */}
+              <Icon name="times" size={30} color="#595959" />
             </TouchableOpacity>
-          </View>
+          </LinearGradient>
         </View>
       </Modal>
     </View>
@@ -476,145 +355,151 @@ const HomeScreen = ({ navigation,route}) => {
 };
 
 const styles = StyleSheet.create({
-  welcomeText: {
-    color: '#000',
-    fontSize: 20,
-    textAlign: 'center',
-    marginTop: 80,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 20,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft:170
-  },
-  plusButton: {
-    backgroundColor: '#59ABC9',
-    padding: 15,
-    borderRadius: 30,
-    width: 70,
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  plusButtonText: {
-    color: 'white',
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  modalBackground: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    padding: 20,
-  },
-  modalContainer: {
-    width: '90%',
-    padding: 20,
     backgroundColor: '#fff',
-    borderRadius: 15,
-    elevation: 10,
-    alignItems: 'center',
   },
-  modalTitle: {
+  welcomeText: {
     fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 15,
+    fontWeight: '600',
+    marginBottom: 20,
     color: '#59ABC9',
   },
-  userList: {
-    width: '100%',
-    marginBottom: 20,
-  },
-  userOptionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    backgroundColor: '#f9f9f9',
-  },
-  userOptionButtonText: {
-    fontSize: 18,
-    color: '#333',
-    marginLeft: 10,
-  },
-  profileCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  plusButton: {
+    padding: 18,
     backgroundColor: '#59ABC9',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 50,
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
   },
-  profileText: {
+  plusIcon: {
+    fontSize: 36,
     color: '#fff',
-    fontSize: 18,
     fontWeight: 'bold',
   },
-  passwordPrompt: {
-    marginTop: 20,
-    width: '100%',
-  },
-  input: {
-    width: '100%',
-    padding: 12,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: '#59ABC9',
-    padding: 12,
-    borderRadius: 10,
+  modalContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
+  modalContent: {
+    width: 360,
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    elevation: 10,
   },
-  addAccountButton: {
-    padding: 12,
-    backgroundColor: '#59ABC9',
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  addAccountButtonText: {
+  switchTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 25,
     color: '#fff',
+  },
+  // optionButton: {
+  //   padding: 15,
+  //   width: '100%',
+  //   alignItems: 'center',
+  //   backgroundColor: '#59ABC9',
+  //   borderRadius: 8,
+  //   marginVertical: 8,
+  //   elevation: 2,
+  // },
+  optionButton: {
+    flexDirection: 'row', // Align icon and text in a row
+    padding: 15,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center', // Center content
+    backgroundColor: '#59ABC9',
+    borderRadius: 8,
+    marginVertical: 8,
+    elevation: 2,
+  },
+  optionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  accountItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    marginVertical: 5,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  profileContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileIcon: {
+    backgroundColor: '#59ABC9',
+    borderRadius: 30,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  profileText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  accountText: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#59ABC9',
   },
-  switchAccountButton: {
+  switchButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+    borderRadius: 8,
+    marginLeft: 15,
+  },
+  
+  cancelButton: {
+    flexDirection: 'row', // Align icon and text in a row
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
     padding: 12,
-    backgroundColor: '#ccc',
-    borderRadius: 5,
-    marginTop: 10,
+    backgroundColor: '#D1D1D1', // Neutral grey for the cancel button
+    borderRadius: 8,
+    width: '100%',
+    alignItems: 'center',
   },
-  switchAccountButtonText: {
-    color: 'black',
+  cancelText: {
+    fontSize: 18,
+    color: '#595959', // Darker grey for better contrast
+    fontWeight: '600',
+    marginLeft: 8, // Space between icon and text
+  },
+  noAccounts: {
     fontSize: 16,
     fontWeight: '600',
-  },
-  modalCloseButton: {
-    padding: 12,
-    backgroundColor: '#ccc',
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  modalCloseButtonText: {
-    color: 'black',
-    fontSize: 16,
+    color: '#7f8c8d',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 
